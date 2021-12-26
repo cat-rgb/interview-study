@@ -1,0 +1,6 @@
+@import url("test.css");
+.content {
+    user-select: none;
+    /*background: #12345678;*/
+    color: red;
+}
