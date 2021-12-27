@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+    mode: "production",
     entry: './src/main',
     output: {
         filename: "bundle.js",
@@ -23,18 +24,6 @@ module.exports = {
                         }
                     },
                     "postcss-loader"
-                    // {
-                    //     loader: "postcss-loader",
-                    //     options: {
-                    //         postcssOptions: {
-                    //             plugins: [
-                    //                 "postcss-preset-env"
-                    //                 // require('autoprefixer')
-                    //             ]
-                    //         }
-                    //     }
-                    // }
-                    // {"loader": "css-loader"}
                 ]
             },
             {
@@ -44,8 +33,9 @@ module.exports = {
                     "css-loader",
                     "less-loader"
                 ]
-            },{
-              test: /\.(png|jpe?g|gif)$/,
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/,
                 use: [
                     {
                         loader: "url-loader",

@@ -1,4 +1,5 @@
-/*@import url("test.css");*/
+@import url("test.css");
+
 .content {
     user-select: none;
     /*background: #12345678;*/
