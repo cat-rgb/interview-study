@@ -2,10 +2,10 @@ const path = require("path")
 const {CleanWebpackPlugin} = require("clean-webpack-plugin")
 module.exports = {
     mode: "development",
-    entry: './src/_commonjs',
+    entry: './src/_cjs_es',
     devtool: "source-map", // development 模式默认是eval
     output: {
-        filename: "commonjs.js",
+        filename: "_cjs_es.js",
         path: path.resolve(__dirname, './build'),
     },
     plugins: [
