@@ -76,7 +76,7 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: "wk.config.js", // 从哪里复制  "public"
+                    from: "webpack.config.js", // 从哪里复制  "public"
                     globOptions: {
                         ignore: [
                             "**/index.html",
