@@ -14,7 +14,7 @@ module.exports = {
         hot: true,
         // hotOnly: true, // 只更新修改的模块
         // host: "0.0.0.0", // 0.0.0.0监听ipv4上的所有地址
-        port: "8080",
+        // port: "8080",
         open: false,
         compress: true, // 压缩相关
         proxy: { // 代理
@@ -41,7 +41,7 @@ module.exports = {
         // watchContentBase: true,  监听contentbase中的资源发生变化
     },
     resolve: {
-        extensions: ['wasm', '.mjs', 'js', 'json', 'jsx', 'ts', 'vue'], // 扩展名查找顺序
+        extensions: ['wasm', '.mjs', '.js', '.json', '.jsx', '.ts', '.vue'], // 扩展名查找顺序
         alias: {
             "@": path.resolve(__dirname, "./src"),
             "views": path.resolve(__dirname, "./src/views")

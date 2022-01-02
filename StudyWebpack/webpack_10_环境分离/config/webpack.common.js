@@ -15,7 +15,7 @@ const commitConfig = {
         path: resolveApp('./build')
     },
     resolve: {
-        extensions: ['wasm', '.mjs', 'js', 'json', 'jsx', 'ts', 'vue'], // 扩展名查找顺序
+        extensions: ['wasm', '.mjs', '.js', '.json', '.jsx', '.ts', '.vue'], // 扩展名查找顺序
         alias: {
             "@": resolveApp("./src"),
             // "views": resolveApp("./src/views")
