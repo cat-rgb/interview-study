@@ -8,7 +8,7 @@ const PurgecssWebpackPlugin = require("purgecss-webpack-plugin")
 const glob = require("glob")
 const resolveApp = require("./paths")
 const CompressionPlugin = require("compression-webpack-plugin")
-
+const {BundleAnalyzerPlugin} = require("webpack-bundle-analyzer")
 module.exports = {
     mode: "development", // 改成development 查看代码效果
     // 配置cdn  index.html 引入cdn
@@ -57,7 +57,8 @@ module.exports = {
             test: /\.(css|js)$/i,
             minRatio: 0.8, // 最小压缩比例，
             algorithm: "gzip", // 压缩算法
-        })
+        }),
+        new BundleAnalyzerPlugin()
         // new webpack.optimize.ModuleConcatenationPlugin()
     ]
 }

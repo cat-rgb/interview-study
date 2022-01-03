@@ -8,6 +8,10 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 let isProduction = false
 
+// const speedMeasurePlugin =require("speed-measure-webpack-plugin")
+// const smp = new speedMeasurePlugin()
+
+
 const commitConfig = (isProduction) => {
     return {
         // 绝对路径
@@ -121,9 +125,8 @@ module.exports = function (env) {
     isProduction = env.production
     // babel.config.js 无法获取到环境变量 在这里设置让babel配置文件访问
     process.env.production = isProduction ? 'production' : 'development'
-    console.log(isProduction)
     const config = isProduction ? prod : dev
     const mergeConfig = merge(config, commitConfig(isProduction))
-    console.log(mergeConfig)
+    // return smp.wrap(mergeConfig) // mergeConfig
     return mergeConfig
 }
