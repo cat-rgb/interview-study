@@ -17,7 +17,12 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: [
-                    "myLoader01",
+                    {
+                      loader: "myLoader01",
+                        options: {
+                          data:1
+                        }
+                    },
                     "myLoader02",
                     "myLoader03",
                 ] // 设置resolveLoader

@@ -21,6 +21,8 @@ module.exports = function (content) {
     // return content + 123
     // this.callback(null, content)
     // const options = getLoaderConfig(this)
+    const options = this.getOptions() // webpack5使用this.getOptions获取options参数
+    console.log(options)
 
     /**
      * 异步loader
