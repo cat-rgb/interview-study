@@ -5,13 +5,39 @@
     <title>Title</title>
 </head>
 <body>
+
+<div id="app">
+    hello {{msg}} {{msg2}}
+    <div>{{msg2}}</div>
+</div>
+
 <script src="./dist/vue.js"></script>
 <script>
 
     const vm = new Vue({
         el: '#app',
-        data: {a: 1}
+        data: {
+            msg: 'msg',
+            msg2: 'msg2'
+        },
+        // data: {a: [1,2,3]},
+        // template: `<div id='app'>
+        // {{abc}}
+        // <div>{{aaa}}</div>
+        // </div>`
     })
+
+    /**
+     * 渲染操作
+     * 1  默认先找render方法
+     * 2  默认没传render 会查找template属性
+     * 3  都没有 找到指定的元素进行渲染
+     * ast解析 template -> render 函数
+     */
+
+    // vm._data.a.push(1,2,3,4, {a: 2})
+    // vm._data.a.splice(1, 2)
+    // console.log(vm.a)
 </script>
 </body>
 </html>
