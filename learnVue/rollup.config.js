@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel'
 import serve from 'rollup-plugin-serve'
+
 export default {
     input: './src/index.js',
     output: {
@@ -16,7 +17,7 @@ export default {
             open: true,
             port: 3000,
             contentBase: '',
-            openPage: '/index.html' // 打开页面是谁
+            openPage: '/watch.html' // 打开页面是谁
         })
     ]
 }

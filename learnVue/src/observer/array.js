@@ -17,6 +17,9 @@ let methods = [
 methods.forEach(method => {
     //  重写原型的方法
     arrayMethods[method] = function(...args) {
+        // 调用方法 通知页面更新
+
+
         const result = oldArrayProtoMethods[method].apply(this, args)
 
         let inserted  // 添加或者修改的 需要观测的参数
@@ -36,7 +39,11 @@ methods.forEach(method => {
                 break
         }
 
-        if(inserted) ob.observerArray(inserted)  // 数组调用方法时如果push({a: 1}) 传的是对象类型还要继续观测
+
+        if (inserted) ob.observerArray(inserted)  // 数组调用方法时如果push({a: 1}) 传的是对象类型还要继续观测
+
+        ob.dep.notify()
+
 
         return result  // 返回array原有的方法进行调用
     }

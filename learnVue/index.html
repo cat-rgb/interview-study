@@ -9,23 +9,61 @@
 <div id="app">
     hello {{msg}} {{msg2}}
     <div>{{msg2}}</div>
+    {{ school }}
+    {{arr}}
 </div>
 
 <script src="./dist/vue.js"></script>
 <script>
 
+    Vue.mixin({
+        created() {
+            console.log(1)
+        }
+    })
+
+    Vue.mixin({
+        created() {
+            console.log(2)
+        }
+    })
+
     const vm = new Vue({
         el: '#app',
-        data: {
-            msg: 'msg',
-            msg2: 'msg2'
+        data() {
+            return {
+                msg: 'msg',
+                msg2: 'msg2',
+                school: {name: 'zf', age: 10},
+                arr: [1, 2, 3, {a: 2}]
+            }
         },
+        created() {
+            console.log(3)
+        },
+        updated() {
+            console.log('updated')
+        }
         // data: {a: [1,2,3]},
         // template: `<div id='app'>
         // {{abc}}
         // <div>{{aaa}}</div>
         // </div>`
     })
+
+
+    vm.msg = '123'
+    vm.school.name = 'xxx'
+
+    vm.arr.push(1234)
+    vm.arr[3].a = 5555
+    vm.arr[3].a = {abc: 12345}
+
+
+    // vm._update(vm._render())
+    // setTimeout(() => {
+    //
+    // }, 1000)
 
     /**
      * 渲染操作
@@ -34,7 +72,6 @@
      * 3  都没有 找到指定的元素进行渲染
      * ast解析 template -> render 函数
      */
-
     // vm._data.a.push(1,2,3,4, {a: 2})
     // vm._data.a.splice(1, 2)
     // console.log(vm.a)

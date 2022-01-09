@@ -19,6 +19,115 @@ function defineProperty(target, key, value) {
     })
 }
 
+export const LIFECYCLE_HOOKS = [
+    'beforeCreate',
+    'created',
+    'beforeMount',
+    'mounted',
+    'beforeUpdate',
+    'updated',
+    'beforeDestroy',
+    'destroyed'
+]
+
+// 状态模式
+const strats = {}
+strats.data = function (parentVal, childVal) {
+    return childVal
+}
+strats.computed = function () {
+}
+strats.watch = function () {
+}
+
+function mergeHook(parentVal, childVal) {
+    if (childVal) { // 儿子有值
+        // 再根据父亲状态返回值
+        if (parentVal) {
+            return parentVal.concat(childVal)
+        } else {
+            return [childVal] // 这里给儿子赋值成数组 第一次进入 parent是undefiend 对儿子进行合并下一次入参会变成parent
+        }
+    } else {
+        // 儿子没值 直接返回父亲的
+        return parentVal
+    }
+
+}
+
+LIFECYCLE_HOOKS.forEach(hook => {
+    strats[hook] = mergeHook
+})
+
+export function mergeOptions(parent, child) {
+    const options = {}
+
+    for (let key in parent) { // 父亲 儿子都有，
+        mergeField(key)
+    }
+
+    for (let key in child) { // 儿子有，父亲没有  将儿子多的给到父亲
+        if (!parent.hasOwnProperty(key)) {
+            mergeField(key)
+        }
+    }
+
+    function mergeField(key) { // 合并字段
+        // 根据不同的策略进行不同的模式
+        if (strats[key]) {
+            options[key] = strats[key](parent[key], child[key])
+        } else {
+            options[key] = child[key]
+        }
+    }
+
+    return options
+}
+
+const callbacks = []
+let timerFunc
+let pending = false
+
+function flushCallbacks() {
+    while (callbacks.length) {
+        let cb = callbacks.pop()
+        cb()
+    }
+    pending = false // 标识已经更新完毕
+}
+
+if (Promise) {
+    timerFunc = () => {
+        Promise.resolve().then(flushCallbacks)
+    }
+} else if (MutationObserver) {
+    // 监控dom变化 监控完是异步更新
+    let observe = new MutationObserver(flushCallbacks)
+    let textNode = document.createTextNode(1)
+    observe.observe(textNode, {characterData: true})
+    timerFunc = () => {
+        textNode.textContent = 2
+    }
+} else if (setImmediate) {
+    timerFunc = () => {
+        setImmediate(flushCallbacks)
+    }
+} else {
+    timerFunc = () => {
+        setTimeout(flushCallbacks)
+    }
+}
+
+export function nextTick(cb) {
+    // 内部会调用nextTick  用户也会调动 但是异步只需要一次
+    callbacks.push(cb)
+    timerFunc()
+    if (!pending) {
+        timerFunc()
+        pending = true
+    }
+}
+
 export {
     proxy,
     defineProperty

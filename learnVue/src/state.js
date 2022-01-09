@@ -1,5 +1,5 @@
 import {observer} from "./observer/index";
-import {proxy} from "./utils";
+import {nextTick, proxy} from "./utils";
 
 export function initState(vm) {
     const opts = vm.$options
@@ -34,12 +34,23 @@ function initData(vm) {
 
 
     // 当从vm上去取数据的时候,将 属性代理到vm._data上
-    for(let key in data) {
-        proxy(vm,'_data', key)
+    for (let key in data) {
+        proxy(vm, '_data', key)
     }
 
     // 进行数据劫持
     observer(data)
 }
-function initComputed() {}
-function initWatch() {}
+
+function initComputed() {
+}
+
+function initWatch() {
+}
+
+
+export function stateMixin(Vue) {
+    Vue.prototype.$nextTick = function (cb) {
+        nextTick(cb)
+    }
+}
