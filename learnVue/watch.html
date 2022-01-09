@@ -6,5 +6,29 @@
 </head>
 <body>
 
+<div id="app">
+    hello {{msg}}
+</div>
+
+<script src="./dist/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+                msg: 'msg',
+            }
+        },
+        watch: {
+            msg: {
+                handler(newvalue, old) {
+                    console.log(newvalue, old)
+                }
+            }
+        }
+    })
+
+    vm.msg = 123
+</script>
 </body>
 </html>

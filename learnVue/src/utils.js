@@ -35,10 +35,10 @@ const strats = {}
 strats.data = function (parentVal, childVal) {
     return childVal
 }
-strats.computed = function () {
-}
-strats.watch = function () {
-}
+// strats.computed = function () {
+// }
+// strats.watch = function () {
+// }
 
 function mergeHook(parentVal, childVal) {
     if (childVal) { // 儿子有值

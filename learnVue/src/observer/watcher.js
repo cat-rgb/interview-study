@@ -9,21 +9,37 @@ class Watcher {
         this.exprOrFn = exprOrFn
         this.cb = cb
         this.options = options
+        this.user = options.user // 用户watcher
+        this.isWatcher = typeof options == "boolean"// 渲染watcher
+
+
         this.id = id++ // watcher的唯一标识
         this.deps = [] // 记录有多少dep被依赖
         this.depsId = new Set()
-
         if (typeof exprOrFn === 'function') {
             this.getter = exprOrFn
+        } else {
+            this.getter = function () {
+                // exprOrFn 可能传的是a
+                let path = exprOrFn.split('.')
+                let obj = vm
+                for (let i = 0; i < path.length; i++) {
+                    obj = obj[path[i]]
+                }
+                return obj
+            }
         }
-        this.get()
+        // 默认会先调用一次 进行取值 将结果保留下来
+        this.value = this.get()
     }
 
     get() {
         // Dep.target = watcher
         pushTarget(this) // 当前watcher实例
-        this.getter() // 默认调用exprOrFn  渲染页面
+        let result = this.getter() // 默认调用exprOrFn  渲染页面
         popTarget()
+
+        return result
     }
 
     update() {
@@ -33,8 +49,11 @@ class Watcher {
     }
 
     run() {
-        console.log(111)
-        this.get()
+        let newValue = this.get()
+        let oldValue = this.value
+        if (this.user) {
+            this.cb.call(this.vm, newValue, oldValue)
+        }
     }
 
     addDep(dep) {
@@ -54,7 +73,11 @@ let pending = false
 
 function flushSchedulerQueue() {
     queue.forEach(watcher => {
-        watcher.run(), watcher.cb()
+        watcher.run()
+        // 用户的时候判断
+        if (!watcher.user) {
+            watcher.cb()
+        }
     })
     queue = [] // 调用完后清空队列
     has = {} // 清空has
