@@ -14,9 +14,9 @@ function genProps(attrs) {
             })
             attr.value = obj  // 给value重新赋值  字符串转换成obj
         }
-        str += `{${attr.name}:${JSON.stringify(attr.value)}},`
+        str += `${attr.name}:${JSON.stringify(attr.value)},`
     }
-    return `${str.slice(0, -1)}`
+    return `{${str.slice(0, -1)}}`
 }
 
 function gen(node) {
