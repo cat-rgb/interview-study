@@ -2,10 +2,9 @@
   "name": "learnvue",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "rollup.config.js",
   "scripts": {
-    "build": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "rollup -c -w"
   },
   "keywords": [],
   "author": "",
