@@ -22,13 +22,15 @@ class Dep {
 }
 
 Dep.target = null
-
+let stack = []
 export function pushTarget(watcher) {
     Dep.target = watcher
+    stack.push(watcher)
 }
 
 export function popTarget(watcher) {
-    Dep.target = null
+    stack.pop()
+    Dep.target = stack[stack.length - 1]
 }
 
 // 多对多的关系  一个属性有一个dep用来收集watcher
