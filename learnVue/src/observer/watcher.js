@@ -10,7 +10,8 @@ class Watcher {
         this.cb = cb
         this.options = options
         this.user = options.user // 用户watcher
-        this.isWatcher = typeof options == "boolean"// 渲染watcher
+        this.lazy = options.lazy // computed watcher
+        this.dirty = this.lazy // 懒渲染
 
 
         this.id = id++ // watcher的唯一标识
@@ -36,16 +37,33 @@ class Watcher {
     get() {
         // Dep.target = watcher
         pushTarget(this) // 当前watcher实例
-        let result = this.getter() // 默认调用exprOrFn  渲染页面
+        let result = this.getter.call(this.vm) // 默认调用exprOrFn  渲染页面
         popTarget()
 
         return result
     }
 
     update() {
-        // 不要每次都调用渲染 异步缓存
-        queueWatcher(this)
-        // this.get() // 重新渲染
+        if (this.lazy) {
+            this.dirty = true
+        } else {
+            // 不要每次都调用渲染 异步缓存
+            queueWatcher(this)
+            // this.get() // 重新渲染
+        }
+
+    }
+
+    depend() {
+        let i = this.deps.length
+        while (i--) {
+            this.deps[i].depend() // 让dep存储渲染watcher
+        }
+    }
+
+    evaluate() {
+        this.value = this.get()
+        this.dirty = false
     }
 
     run() {

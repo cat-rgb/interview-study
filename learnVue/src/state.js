@@ -1,6 +1,7 @@
 import {observer} from "./observer/index";
 import {nextTick, proxy} from "./utils";
 import Watcher from "./observer/watcher";
+import Dep from "./observer/dep";
 
 export function initState(vm) {
     const opts = vm.$options
@@ -46,7 +47,55 @@ function initData(vm) {
     observer(data)
 }
 
-function initComputed() {
+function initComputed(vm) {
+    const computed = vm.$options.computed
+    // 1 需要有wacther 2 通过Object.define  3  dirty
+    const watchers = vm._computedWatchers = {} // 用来稍后存放计算属性的watcher
+
+    for (let key in computed) {
+        const userDef = computed[key]  // 取出对应的值来
+        const getter = typeof userDef == 'function' ? userDef : userDef.get
+        watchers[key] = new Watcher(vm, getter, () => {
+        }, {lazy: true})
+        defineComputed(vm, key, userDef)
+    }
+}
+
+
+function defineComputed(target, key, userDef) {
+    const sharedPropertyDefinition = {
+        enumerable: true,
+        configurable: true,
+        get: () => {
+        },
+        set: () => {
+        }
+    }
+    if (typeof userDef == 'function') {
+        sharedPropertyDefinition.get = createComputedGetter(key)
+    } else {
+        sharedPropertyDefinition.get = createComputedGetter(key)
+        sharedPropertyDefinition.set = userDef.set
+    }
+
+    Object.defineProperty(target, key, sharedPropertyDefinition)
+}
+
+function createComputedGetter(key) {
+    return function () {
+        const watcher = this._computedWatchers[key] // 拿到这个属性对应watcher
+        if (watcher) {
+            if (watcher.dirty) { // 默认肯定是脏的
+                watcher.evaluate() //
+            }
+
+            if (Dep.target) {
+                watcher.depend()
+            }
+
+            return watcher.value
+        }
+    }
 }
 
 function initWatch(vm) {
