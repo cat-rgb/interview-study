@@ -1,6 +1,13 @@
+// import {createComponent} from "./index";
+
 export function patch(oldVnode, vnode) {
     // 初始化的时候用虚拟节点创建真实节点
     // 虚拟节点转换成真实节点
+
+    if (!oldVnode) { // 如果oldVnode 是undefined
+        return createElm(vnode)
+    }
+
 
     if (oldVnode.nodeType === 1) {
         // 说明是初始化
@@ -134,10 +141,25 @@ function isSameVnode(oldVnode, newVnode) {
     return (oldVnode.tag === newVnode.tag) && (oldVnode.key === newVnode.key)
 }
 
+function createComponent(vnode) {
+    let i = vnode.data
+    if ((i = i.hook) && (i = i.init)) {
+        i(vnode)
+    }
+
+    if (vnode.componentInstance) {
+        return true
+    }
+}
 
 export function createElm(vnode) {
     let {tag, children, key, data, text} = vnode
     if (typeof tag === 'string') { // 创建元素 放到vnode.el上
+
+        if (createComponent(vnode)) {
+            return vnode.componentInstance.$el // 组件对应的dom元素
+        }
+
         vnode.el = document.createElement(tag)
         updateProperties(vnode)
         children.forEach(child => { // 遍历儿子 塞给父亲

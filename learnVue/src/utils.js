@@ -32,9 +32,20 @@ export const LIFECYCLE_HOOKS = [
 
 // 状态模式
 const strats = {}
-strats.data = function (parentVal, childVal) {
-    return childVal
+
+strats.components = function (parentVal, childVal) {
+    const res = Object.create(parentVal)
+    if (childVal) {
+        for (let key in childVal) {
+            res[key] = childVal[key]
+        }
+    }
+    return res
 }
+
+// strats.data = function (parentVal, childVal) {
+//     return childVal
+// }
 // strats.computed = function () {
 // }
 // strats.watch = function () {
@@ -77,7 +88,14 @@ export function mergeOptions(parent, child) {
         if (strats[key]) {
             options[key] = strats[key](parent[key], child[key])
         } else {
-            options[key] = child[key]
+            // 判断组件子类有没有值
+            if (child[key]) {
+                options[key] = child[key]
+            } else {
+                options[key] = parent[key]
+
+            }
+
         }
     }
 
@@ -127,6 +145,23 @@ export function nextTick(cb) {
         pending = true
     }
 }
+
+function makeMap(str) {
+    const mapping = {}
+    const list = str.split(',')
+    for (let i = 0; i < list.length; i++) {
+        mapping[list[i]] = true
+    }
+
+    return (key) => {
+        return mapping[key]
+    }
+}
+
+// 判断是否是原生标签
+export const isReservedTag = makeMap(
+    'a, div, p, ul, li'
+)
 
 export {
     proxy,
