@@ -1,52 +1,42 @@
-// 拿到数组的原型的方法
 
-let oldArrayProtoMethods = Array.prototype
 
-let arrayMethods = Object.create(oldArrayProtoMethods)
+const oldArrayPrototypeMethods = Array.prototype
 
-let methods = [
+const newArrayMethods = Object.create(oldArrayPrototypeMethods)
+
+const arrayMethods = [
     'push',
     'pop',
     'shift',
     'unshift',
-    'reverse',
     'sort',
-    'splice'
+    'splice',
+    'reverse'
 ]
 
-methods.forEach(method => {
-    //  重写原型的方法
-    arrayMethods[method] = function(...args) {
-        // 调用方法 通知页面更新
+arrayMethods.forEach((method) => {
+    newArrayMethods[method] = function(...args) {
+        const result = oldArrayPrototypeMethods[method].apply(this, args)
+        console.log('array ')
 
-
-        const result = oldArrayProtoMethods[method].apply(this, args)
-
-        let inserted  // 添加或者修改的 需要观测的参数
-        const ob = this.__ob__ // this 是指 调用方法的arr数组
+        let inserted
+        const ob = this.__ob__
         switch (method) {
             case 'push':
             case 'unshift':
                 inserted = args
                 break;
-            case 'splice': // vue set 原理
-                /**
-                 * arr.splice(0, 1, {a:1})   args = [0,1, {a: 1}]  第三个值用于替换
-                 * 如果替换的第三个值是个对象 就进行观测 将第三个值截取出来
-                 */
+            case 'splice':
                 inserted = args.splice(2)
+                break;
             default:
-                break
+                break;
         }
 
+        if(inserted) ob.observerArray(inserted) // 如果修改的数据中有对象或者数组继续检测
 
-        if (inserted) ob.observerArray(inserted)  // 数组调用方法时如果push({a: 1}) 传的是对象类型还要继续观测
-
-        ob.dep.notify()
-
-
-        return result  // 返回array原有的方法进行调用
+        return result
     }
 })
 
-export {arrayMethods}
+export default newArrayMethods

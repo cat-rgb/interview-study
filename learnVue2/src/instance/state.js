@@ -1,4 +1,4 @@
-import {observer, proxy} from "./observer";
+import {observer, proxy} from "../observer/index";
 
 
 export function initState(vm) {
