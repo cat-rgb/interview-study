@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var value = 1;
+    function foo(v) {
+        debugger
+        var v = 2;
+        console.log(v); //2
+    }
+    foo(value);
+    console.log(value) // 1
+</script>
+</body>
+</html>

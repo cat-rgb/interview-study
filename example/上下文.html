@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        var cback, dback;
+
+        function a() {
+            let x = 1, y = 2;
+
+            function b() {
+                let z = 3;
+                console.log('b exec');
+
+                function c() {
+                    console.log(x);
+                    console.log(z);
+                }
+
+                cback = c;
+
+                function d() {
+                    console.log(y);
+                    console.log(z);
+                }
+
+                dback = d;
+            }
+
+            b();
+        }
+
+        a();
+    </script>
+</body>
+</html>
